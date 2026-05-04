@@ -58,33 +58,43 @@ export default function MiniAppClient() {
 useEffect(() => {
   let cancelled = false;
 
-  // 🔥 CLAVE: renderizamos SIEMPRE
-  setIsReady(true);
-
   const init = async () => {
     try {
-      const timeout = new Promise((resolve) =>
-        setTimeout(() => resolve(null), 500)
-      );
+      let ctx: any = null;
 
-      const ctx: any = await Promise.race([
-        sdk?.context,
-        timeout,
-      ]);
+      try {
+        const timeout = new Promise((resolve) =>
+          setTimeout(() => resolve(null), 1200)
+        );
 
-      if (!cancelled && ctx?.user) {
-        setUser({
-          fid: ctx.user.fid,
-          username: ctx.user.username,
-          displayName: ctx.user.displayName,
-          pfpUrl: ctx.user.pfpUrl,
-        });
+        ctx = await Promise.race([
+          sdk?.context,
+          timeout,
+        ]);
+
+        if (!cancelled && ctx?.user) {
+          setUser({
+            fid: ctx.user.fid,
+            username: ctx.user.username,
+            displayName: ctx.user.displayName,
+            pfpUrl: ctx.user.pfpUrl,
+          });
+        }
+      } catch (err) {
+        console.warn("No Farcaster/Base context:", err);
       }
 
-      // ⚠️ NO bloquea nada
-      sdk?.actions?.ready?.().catch(() => {});
+      // 🔥 ESTO ES LO CRÍTICO
+      try {
+        await sdk?.actions?.ready?.();
+      } catch (err) {
+        console.warn("ready() fallback:", err);
+      }
+
     } catch (err) {
-      console.warn("SDK falló pero seguimos:", err);
+      console.error("Error inicializando:", err);
+    } finally {
+      if (!cancelled) setIsReady(true);
     }
   };
 
