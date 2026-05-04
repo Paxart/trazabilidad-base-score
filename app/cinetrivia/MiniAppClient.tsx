@@ -104,6 +104,12 @@ useEffect(() => {
     cancelled = true;
   };
 }, []);
+const formatTime = (seconds: number) => {
+  const s = Math.max(0, seconds);
+  const m = Math.floor(s / 60);
+  const rest = s % 60;
+  return `${m}:${rest.toString().padStart(2, "0")}`;
+};
   // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
