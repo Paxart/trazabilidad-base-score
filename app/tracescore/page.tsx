@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   description:
     "Analiza tu actividad en Base, descubre tu ranking y nivel frente a otros usuarios.",
 };
-
+//rebuild force
 export default function Page() {
   return <MiniAppClient />;
 }
