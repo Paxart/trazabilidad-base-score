@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { trivias } from "./data";
-import type { TriviaDefinition, SupportedLanguage } from "./data/types";
+
 
 type Phase = "library" | "language" | "playing" | "finished" | "ranking";
 
